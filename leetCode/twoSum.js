@@ -13,7 +13,8 @@
  */
 
 
-//  First pass -- Maybe there's a recursive solution that's nicer.
+//  First pass -- This is brute force O(n * n) (n squared)
+// https://cl.ly/34432c1L1m1e -- This code can get a lot better.  Let's try again later.
 
 /**
  * Only return numbers that sum to the matching target
@@ -22,7 +23,7 @@
  * 
  * @return {array} the indexes of the summed numbers or an empty array
  */
-const twoSum = (numbers, target) => {
+const twoSumBruteForce = (numbers, target) => {
   const indexes = [];
   for(let i = 0, l = numbers.length; i < l; i++) {
    for(let j = (i + 1); j < l; j++) {
@@ -40,4 +41,29 @@ const twoSum = (numbers, target) => {
   return indexes;
 };
 
- console.log(twoSum([3, 2, 4], 6));
+//  console.log(twoSumBruteForce([3, 2, 4], 6));
+
+//  Still buggy, have some collisions to think about.
+ const twoSumHashTable = (numbers, target) => {
+   const map = new Map();
+   const indexes = [];
+   for(let i = 0, l = numbers.length; i < l; i++) {
+    if(map.has(numbers[i])) {
+      let value = map.get(numbers[i]);
+      value.push(i);
+    }
+      map.set(numbers[i], [i]);
+   }
+
+   for(let i = 0, l = numbers.length; i < l; i++) {
+     const complement = target - numbers[i];
+
+     if(map.has(complement) && map.get(complement) !== i) {
+        indexes.push(map.get(numbers[i]));
+     }
+   }
+
+   return map.get(numbers[1]);
+ }
+
+console.log(twoSumHashTable([3, 3], 6));
