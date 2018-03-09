@@ -46,24 +46,32 @@ const twoSumBruteForce = (numbers, target) => {
 //  Still buggy, have some collisions to think about.
  const twoSumHashTable = (numbers, target) => {
    const map = new Map();
-   const indexes = [];
+   const indexes = new Set();
    for(let i = 0, l = numbers.length; i < l; i++) {
+     let set = new Set();
     if(map.has(numbers[i])) {
       let value = map.get(numbers[i]);
-      value.push(i);
+      value.add(i);
+    } else {
+      map.set(numbers[i], set.add(i));
     }
-      map.set(numbers[i], [i]);
    }
 
    for(let i = 0, l = numbers.length; i < l; i++) {
      const complement = target - numbers[i];
 
-     if(map.has(complement) && map.get(complement) !== i) {
-        indexes.push(map.get(numbers[i]));
+     if(map.has(complement)) {
+        indexes.add(map.get(numbers[i]));
      }
    }
+   console.log(Array.from(indexes.entries()), 'something');
+   return flattenArray(Array.from(indexes.entries));
+ }
 
-   return map.get(numbers[1]);
+ function flattenArray(array) {
+   return array.reduce((prev, curr) => {
+    return Array.isArray(curr) ? flattenArray(prev.concat(curr)) : prev.concat(curr);
+   }, []);
  }
 
 console.log(twoSumHashTable([3, 3], 6));
